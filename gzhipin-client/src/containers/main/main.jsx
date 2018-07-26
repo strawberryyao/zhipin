@@ -14,6 +14,7 @@ import Boss from '../boss/Boss';
 import Message from '../message/Message';
 import Personal from '../personal/Personal';
 import NavFooter from '../../components/nav-footer/nav-footer';
+import Chat from '../../containers/chat/chat';
 import {getRedirectTo} from '../../utils';
 import {getUser} from '../../redux/action';
 import NotFound from '../../components/not-found/not-found';
@@ -25,14 +26,14 @@ class Main extends Component{
       path: '/boss', // 路由路径
       component: Boss,
       title: '大神列表',
-      icon: 'dashen',
+      icon: 'biggod',
       text: 'BigGod',
     },
     {
       path: '/biggod', // 路由路径
       component: BigGod,
       title: '老板列表',
-      icon: 'laoban',
+      icon: 'boss',
       text: 'Boss',
     },
     {
@@ -93,7 +94,7 @@ class Main extends Component{
 
     return(
       <div>
-        {currentNav ? <NavBar>{currentNav.title}</NavBar> : null}
+        {currentNav ? <NavBar className = 'nav-header'>{currentNav.title}</NavBar> : null}
         <Switch>
           <Route path='/bossinfo' component={BossInfo}/>
           <Route path='/biggodinfo' component={BigGodInfo}/>
@@ -101,6 +102,8 @@ class Main extends Component{
           <Route path='/boss' component={Boss}/>
           <Route path='/message' component={Message}/>
           <Route path='/personal' component={Personal}/>
+          <Route path='/chat/:userid' component={Chat}/>
+
           <Route component={NotFound}/>
 
         </Switch>

@@ -10,6 +10,9 @@ import Register from './containers/register/register';
 import Main from './containers/main/main';
 import store from './redux/store';
 
+//测试聊天接口
+//import './test/socketio_test'
+
 import './assets/css/index.less'
 
 ReactDOM.render((

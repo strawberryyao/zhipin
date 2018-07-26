@@ -5,7 +5,8 @@ import {
   AUTH_SUCCESS,
   ERROR_MSG,
   RESET_USER,
-  RECEIVE_USER
+  RECEIVE_USER,
+  RECEIVE_USER_LIST
 } from "./types";
 import {getRedirectTo} from '../utils';
 
@@ -33,6 +34,18 @@ function user(preState = initState, action) {
   }
 }
 
+// 产生userList状态的reducer
+const initUserList = []
+function userList(state=initUserList, action) {
+  switch (action.type) {
+    case RECEIVE_USER_LIST:
+      return action.data
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
-  user
+  user,
+  userList
 })

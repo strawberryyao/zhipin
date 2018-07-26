@@ -6,20 +6,25 @@
 2.发送请求
 3.分发action
 */
+import io from 'socket.io-client'
 
 import {
   AUTH_SUCCESS,
   ERROR_MSG,
   RESET_USER,
-  RECEIVE_USER
+  RECEIVE_USER,
+  RECEIVE_USER_LIST
 } from "./types";
-import {reqRegister, reqLogin,reqUpdateUser,reqUser} from '../api';
+import {reqRegister, reqLogin, reqUpdateUser, reqUser,reqUserList} from '../api';
 
 const authSuccess = (user) => ({type: AUTH_SUCCESS, data: user});
 const errorMsg = (msg) => ({type: ERROR_MSG, data: msg});
 
-const receiveUser = (user) => ({type:RECEIVE_USER,data:user});
-export const resetUser = (msg) => ({type:RESET_USER,data:msg});
+const receiveUser = (user) => ({type: RECEIVE_USER, data: user});
+export const resetUser = (msg) => ({type: RESET_USER, data: msg});
+
+// 接收用户列表的同步action
+const receiveUserList = (userList) => ({type:RECEIVE_USER_LIST, data: userList});
 
 
 /*进行前台的表单验证然后发送请求，减少请求数量*/
@@ -80,11 +85,11 @@ export function login(user) {
 /*
 获取当前用户的异步action
  */
-export function getUser () {
+export function getUser() {
   return async dispatch => {
     const response = await reqUser()
     const result = response.data;
-    if(result.code===0) {
+    if (result.code === 0) {
       dispatch(receiveUser(result.data))
     } else {
       dispatch(resetUser(result.msg))
@@ -95,15 +100,40 @@ export function getUser () {
 
 //
 export function updateUser(user) {
-return async dispatch =>{
-  const response = await reqUpdateUser(user);
-  const result = response.data;
-  if(result === 0){
-    dispatch(receiveUser(result.data))
-  }else{
-    dispatch( resetUser(result.msg))
+  return async dispatch => {
+    const response = await reqUpdateUser(user);
+    const result = response.data;
+    if (result === 0) {
+      dispatch(receiveUser(result.data))
+    } else {
+      dispatch(resetUser(result.msg))
+    }
   }
 }
+//获取指定用户列表的异步action
+export function getUserList(type) {
+  return async dispatch => {
+    const response = await reqUserList(type);
+    const result = response.data;
+    if(result.code===0) {
+      dispatch(receiveUserList(result.data))
+    }
+  }
 }
 
+//连接服务器，得到连接代表socket对象
+ const socket = io('ws://localhost:4000');
 
+export function sendMessage({content,from,to}) {
+
+  return dispatch => {
+    //向服务器发送消息消息名:sendMsg , 数据:{}
+    socket.emit('sendMsg',{content,from,to})
+    //绑定接收服务器发送消息的监听
+    socket.on('receiveMsg',chatMsg => {
+      console.log('receiveMsg', chatMsg);
+    })
+  }
+
+
+}

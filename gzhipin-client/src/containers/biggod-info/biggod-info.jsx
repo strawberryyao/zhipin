@@ -28,7 +28,7 @@ class BigGodInfo extends Component {
     this.props.updateUser(this.state);
   };
   render() {
-    const {header,type} = this.props.user;
+    const {header} = this.props.user;
     if(header){
       return <Redirect to ='/biggod'/>
     }
